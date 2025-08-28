@@ -20,6 +20,7 @@
 <div class="container">
   <h1>Cập Nhật Hạt Giống</h1>
   <form action="/seeds/edit/${seedId}" method="post">
+    <input type="hidden" name="id" value="${seed.id}">
     <div class="form-group">
       <label for="seedName">Tên Hạt Giống</label>
       <input type="text" class="form-control" id="seedName" name="seedName" value="${seed.seedName}" required>
@@ -32,7 +33,7 @@
       <label for="category">Danh Mục</label>
       <select class="form-control" id="category" name="categoryId" required>
         <c:forEach var="category" items="${categories}">
-          <option value="${category.id}" <c:if test="${category.id == seed.categoryId}">selected</c:if>>${category.cateName}</option>
+          <option value="${category.id}" <c:if test="${category.id == seed.category.id}">selected</c:if>>${category.cateName}</option>
         </c:forEach>
       </select>
     </div>

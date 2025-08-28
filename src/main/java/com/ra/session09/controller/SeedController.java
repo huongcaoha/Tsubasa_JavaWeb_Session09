@@ -1,6 +1,4 @@
 package com.ra.session09.controller;
-
-import com.ra.session09.model.dto.SeedDTO;
 import com.ra.session09.model.entity.Seed;
 import com.ra.session09.service.CategoryService;
 import com.ra.session09.service.SeedService;
@@ -42,25 +40,25 @@ public class SeedController {
 
     @GetMapping("/add")
     public String showAdd(Model model) {
-        model.addAttribute("seed", new SeedDTO());
+        model.addAttribute("seed", new Seed());
         model.addAttribute("categories", categoryService.findAll());
         return "addSeed";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute SeedDTO seedDTO, Model model , RedirectAttributes redirectAttributes) {
-       if (seedService.checkSeedNameExists(seedDTO.getSeedName())){
+    public String add(@ModelAttribute Seed seed, Model model , RedirectAttributes redirectAttributes) {
+       if (seedService.checkSeedNameExists(seed.getSeedName())){
            model.addAttribute("error", "This seed already exists");
-           model.addAttribute("seed", seedDTO);
+           model.addAttribute("seed", seed);
            return "addSeed";
        }else {
-           boolean rs = seedService.saveSeed(seedDTO);
+           boolean rs = seedService.saveSeed(seed);
            if(rs) {
                redirectAttributes.addFlashAttribute("message", "Seed added successfully");
                return "redirect:/seeds";
            }else {
                model.addAttribute("message", "Add seed failed");
-               model.addAttribute("seed", seedDTO);
+               model.addAttribute("seed", seed);
                return "addSeed";
            }
        }
@@ -68,29 +66,29 @@ public class SeedController {
 
     @GetMapping("/edit/{id}")
     public String showEdit(Model model, @PathVariable long id) {
-        model.addAttribute("seed", seedService.convertSeedToSeedDTO(seedService.findById(id)));
+        model.addAttribute("seed", seedService.findById(id));
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("seedId" ,id);
         return "editSeed";
     }
 
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable long id,@ModelAttribute SeedDTO seedDTO, Model model , RedirectAttributes redirectAttributes) {
+    public String edit(@PathVariable long id,@ModelAttribute Seed seed, Model model , RedirectAttributes redirectAttributes) {
         Seed oldSeed = seedService.findById(id);
-        if (seedService.checkSeedNameExists(seedDTO.getSeedName()) && !seedDTO.getSeedName().equalsIgnoreCase(oldSeed.getSeedName())) {
+        if (seedService.checkSeedNameExists(seed.getSeedName()) && !seed.getSeedName().equalsIgnoreCase(oldSeed.getSeedName())) {
             model.addAttribute("error", "This seed already exists");
-            model.addAttribute("seed", seedDTO);
+            model.addAttribute("seed", seed);
             model.addAttribute("seedId" ,id);
             model.addAttribute("categories", categoryService.findAll());
             return "editSeed";
         }else {
-            boolean rs = seedService.updateSeed(id ,seedDTO);
+            boolean rs = seedService.updateSeed(seed);
             if(rs) {
                 redirectAttributes.addFlashAttribute("message", "Seed update successfully");
                 return "redirect:/seeds";
             }else {
                 model.addAttribute("message", "Update seed failed");
-                model.addAttribute("seed", seedDTO);
+                model.addAttribute("seed", seed);
                 model.addAttribute("seedId" ,id);
                 model.addAttribute("categories", categoryService.findAll());
                 return "editSeed";

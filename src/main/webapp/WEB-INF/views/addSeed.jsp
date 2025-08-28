@@ -20,6 +20,7 @@
 <div class="container">
     <h1>Thêm Mới Hạt Giống</h1>
     <form action="/seeds/add" method="post">
+        <input type="hidden" name="id" value="${seed.id}">
         <div class="form-group">
             <label for="seedName">Tên Hạt Giống</label>
             <input type="text" class="form-control" value="${seed.seedName}" id="seedName" name="seedName" required>
@@ -30,7 +31,7 @@
         </div>
         <div class="form-group">
             <label for="category">Danh Mục</label>
-            <select class="form-control" id="category" name="categoryId" required>
+            <select class="form-control" id="category" name="category.id"  required>
                 <option value="">Chọn danh mục</option>
 
                 <c:forEach var="category" items="${categories}">

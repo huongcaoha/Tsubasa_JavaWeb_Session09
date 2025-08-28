@@ -1,6 +1,5 @@
 package com.ra.session09.service;
 
-import com.ra.session09.model.dto.SeedDTO;
 import com.ra.session09.model.entity.Seed;
 import com.ra.session09.repository.SeedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +32,17 @@ public class SeedService {
     }
 
     @Transactional
-    public boolean saveSeed(SeedDTO seedDTO) {
-        return seedRepository.addSeed(convertSeedDTOToSeed(seedDTO));
+    public boolean saveSeed(Seed seed) {
+        return seedRepository.addSeed(seed);
     }
 
     @Transactional
-    public boolean updateSeed(long id ,SeedDTO seedDTO) {
-        Seed oldSeed = findById(id);
+    public boolean updateSeed(Seed seed) {
+        Seed oldSeed = findById(seed.getId());
         if (oldSeed == null) {
             return false;
         }else {
-            Seed newSeed = convertSeedDTOToSeed(seedDTO);
-            newSeed.setId(oldSeed.getId());
-            return seedRepository.updateSeed(newSeed);
+            return seedRepository.updateSeed(seed);
         }
     }
 
@@ -64,21 +61,5 @@ public class SeedService {
         return seedRepository.checkSeedNameExists(seedName) > 0;
     }
 
-    public Seed convertSeedDTOToSeed(SeedDTO seedDTO) {
-        return Seed
-                .builder()
-                .seedName(seedDTO.getSeedName())
-                .quantity(seedDTO.getQuantity())
-                .category(categoryService.findById(seedDTO.getCategoryId()))
-                .build();
-    }
 
-    public SeedDTO convertSeedToSeedDTO(Seed seed) {
-        return SeedDTO
-                .builder()
-                .seedName(seed.getSeedName())
-                .quantity(seed.getQuantity())
-                .categoryId(seed.getCategory().getId())
-                .build();
-    }
 }
